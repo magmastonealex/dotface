@@ -51,10 +51,25 @@ static void graphics_draw_line2(GContext *ctx, GPoint p0, GPoint p1, int8_t widt
   }
 }
 
+void floatToString(double number)
+{
+char buffer[20];
+const int bufferSize=20;
+char decimalBuffer[5];
+
+snprintf(buffer, bufferSize, "%d", (int)number);
+strcat(buffer, ".");
+
+snprintf(decimalBuffer, 5, "%02d", (int)((double)(number - (int)number) * (double)100));
+strcat(buffer, decimalBuffer);
+
+APP_LOG(APP_LOG_LEVEL_INFO,"%s",buffer);
+  
+}
+
 static void my_layer_draw(Layer *layeer, GContext *ctx) {
   time_t now = time(NULL);
   struct tm *t = localtime(&now);
-  int hr = t->tm_hour; 
   // Draw a white filled circle a radius of half the layer height
   graphics_context_set_fill_color(ctx, GColorBlack);
   //0,1,2,3 are the valid hours.
@@ -64,7 +79,8 @@ static void my_layer_draw(Layer *layeer, GContext *ctx) {
   double y;
 
 int32_t hourHandLength=60;
-int32_t hour_angle = TRIG_MAX_ANGLE * t->tm_hour / 12;
+ 
+int32_t hour_angle = (TRIG_MAX_ANGLE * (((t->tm_hour % 12) * 6) + (t->tm_min / 10))) / (12 * 6);
 y = (-cos_lookup(hour_angle) * hourHandLength / TRIG_MAX_RATIO) + 84;
 x = (sin_lookup(hour_angle) * hourHandLength / TRIG_MAX_RATIO) + 72;
 
@@ -90,7 +106,7 @@ void handle_init(void) {
   layer_add_child(layer,inverter_layer_get_layer(ilayer));
   window_stack_push(my_window, true);
 
-  tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+  tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
 
 }
 
