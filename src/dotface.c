@@ -7,8 +7,42 @@ Layer *layer;
 
 static char hour_buffer[10];
 static char min_buffer[3];
+
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed){
   layer_mark_dirty(window_get_root_layer(my_window));
+}
+
+static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
+  Tuple *t = dict_read_first(iterator);
+
+  // Process all pairs present
+  while(t != NULL) {
+    // Process this pair's key
+    switch (t->key) {
+      case 0:
+        persist_write_int(0, t->value->int32);
+        break;
+      case 1:
+        persist_write_int(1, t->value->int32);
+        break;
+    }
+
+    // Get next pair, if any
+    t = dict_read_next(iterator);
+  }
+  layer_mark_dirty(window_get_root_layer(my_window));
+}
+
+static void inbox_dropped_callback(AppMessageResult reason, void *context) {
+  APP_LOG(APP_LOG_LEVEL_ERROR, "Message dropped!");
+}
+
+static void outbox_failed_callback(DictionaryIterator *iterator, AppMessageResult reason, void *context) {
+  APP_LOG(APP_LOG_LEVEL_ERROR, "Outbox send failed!");
+}
+
+static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
+  APP_LOG(APP_LOG_LEVEL_INFO, "Outbox send success!");
 }
 
 static void graphics_draw_line2(GContext *ctx, GPoint p0, GPoint p1, int8_t width) {
@@ -73,7 +107,27 @@ static void my_layer_draw(Layer *layeer, GContext *ctx) {
   // Draw a white filled circle a radius of half the layer height
   graphics_context_set_fill_color(ctx, GColorBlack);
   //0,1,2,3 are the valid hours.
-  //
+  
+
+  int invertq = 0;
+  int faceC=0;
+  if (persist_exists(0)) {
+    invertq = persist_read_int(0);
+  }
+  if (persist_exists(1)) {
+    faceC = persist_read_int(1);
+  }
+
+  if(invertq!=0){
+    layer_set_hidden(inverter_layer_get_layer(ilayer),true);
+  }else{
+    layer_set_hidden(inverter_layer_get_layer(ilayer),false);
+  }
+  if(faceC != 0){
+    graphics_draw_circle(ctx,GPoint(72,84),60);
+  }
+
+
   
   double x;
   double y;
@@ -92,9 +146,9 @@ y = (-cos_lookup(second_angle) * secondHandLength / TRIG_MAX_RATIO) + 84;
 x = (sin_lookup(second_angle) * secondHandLength / TRIG_MAX_RATIO) + 72;
   
   graphics_draw_line2(ctx,GPoint(72,84), GPoint((int)x, (int)y),5);
-  graphics_fill_circle(ctx, GPoint((int)x, (int)y), 2);
-    graphics_fill_circle(ctx, GPoint((int)72, (int)84), 2);
-//   graphics_draw_circle(ctx,GPoint(72,84),60);
+  graphics_fill_circle(ctx, GPoint((int)x, (int)y), 1);
+    graphics_fill_circle(ctx, GPoint((int)72, (int)84), 1);
+//   
 }
 
 void handle_init(void) {
@@ -107,6 +161,14 @@ void handle_init(void) {
   window_stack_push(my_window, true);
 
   tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
+
+app_message_register_inbox_received(inbox_received_callback);
+app_message_register_inbox_dropped(inbox_dropped_callback);
+app_message_register_outbox_failed(outbox_failed_callback);
+app_message_register_outbox_sent(outbox_sent_callback);
+
+app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
+
 
 }
 
