@@ -90,7 +90,7 @@ void handle_init(void) {
   layer_add_child(layer,inverter_layer_get_layer(ilayer));
   window_stack_push(my_window, true);
 
-  tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
+  tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
 
 }
 
