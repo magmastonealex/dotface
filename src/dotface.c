@@ -146,8 +146,8 @@ y = (-cos_lookup(second_angle) * secondHandLength / TRIG_MAX_RATIO) + 84;
 x = (sin_lookup(second_angle) * secondHandLength / TRIG_MAX_RATIO) + 72;
   
   graphics_draw_line2(ctx,GPoint(72,84), GPoint((int)x, (int)y),5);
-  graphics_fill_circle(ctx, GPoint((int)x, (int)y), 1);
-    graphics_fill_circle(ctx, GPoint((int)72, (int)84), 1);
+  graphics_fill_circle(ctx, GPoint((int)x, (int)y), 2);
+    graphics_fill_circle(ctx, GPoint((int)72, (int)84), 2);
 //   
 }
 
