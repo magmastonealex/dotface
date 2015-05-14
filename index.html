@@ -11,7 +11,7 @@
 <div class="container" role="main">
 <div class="row">
 <div class="checkbox">
-  <label>
+  <label id="inverted">
     <input id="invertedB" type="checkbox" value="">
     Inverted?
   </label>
@@ -22,7 +22,7 @@
 <br>
 <div class="row">
 <div class="checkbox">
-  <label>
+  <label id="fCircle" >
     <input id="fCircleB"  type="checkbox" value="">
     Face Circle
   </label>
@@ -62,18 +62,19 @@ $(document).ready(function(){
 		localStorage.setItem("faceCircle","F");
 	}
 
-	$("#fCircleB").click(function(){
+	$("#fCircle").click(function(){
+		console.log("here?");
 		if( $("#fCircleB").prop("checked") ){
-			localStorage.setItem("faceCircle","F");
-		}else{
 			localStorage.setItem("faceCircle","T");
+		}else{
+			localStorage.setItem("faceCircle","F");
 		}
 	});
-	$("#invertedB").click(function(){
+	$("#inverted").click(function(){
 		if( $("#invertedB").prop("checked")){
-			localStorage.setItem("inverted","F");
-		}else{
 			localStorage.setItem("inverted","T");
+		}else{
+			localStorage.setItem("inverted","F");
 		}
 	});
 	$("#submit").click(function(){
