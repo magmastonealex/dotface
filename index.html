@@ -78,7 +78,8 @@ $(document).ready(function(){
 		}
 	});
 	$("#submit").click(function(){
-		str=JSON.stringify({'inverted':localStorage.getItem("inverted"),'faceCircle':localStorage.getItem("faceCircle")})
+		//fixed stuff.
+		str=JSON.stringify({'inverted':localStorage.getItem("faceCircle"),'faceCircle':localStorage.getItem("inverted")})
 		location.href = 'pebblejs://close#' + encodeURIComponent(str);
 	});
 });
