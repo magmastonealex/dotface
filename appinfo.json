@@ -1,0 +1,17 @@
+{
+  "uuid": "49d1efc3-7376-4099-b5ce-a79e6e3b6fab",
+  "shortName": "dotface",
+  "longName": "dotface",
+  "companyName": "MagmaStone",
+  "versionCode": 1,
+  "versionLabel": "1.0",
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  }
+}
