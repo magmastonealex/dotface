@@ -10,12 +10,75 @@
 <body>
 <div class="container" role="main">
 <div class="row">
-<div class="btn-group col-sm-12" style="background-color:grey;" data-toggle="buttons">
-  <label class="btn btn-primary">
-    <input type="checkbox" autocomplete="off" checked> Checkbox 1 (pre-checked)
+<div class="btn-group col-sm-12" style="" data-toggle="buttons">
+  <label id="invertedB" class="btn btn-primary" style="width: 100%;">
+    <input id="inverted" type="checkbox" autocomplete="off" style="display: block; width: 100%;"> Inverted?
   </label>
 </div>
 </div>
+
+<br>
+<br>
+<div class="row">
+<div class="btn-group col-sm-12" style="" data-toggle="buttons">
+  <label id="fCircleB" class="btn btn-primary" style="width: 100%;">
+    <input id="fCircle" type="checkbox" autocomplete="off" style="display: block; width: 100%;"> Face circle?
+  </label>
 </div>
+</div>
+
+<br>
+<br>
+
+<div class="row">
+<div class="btn-group col-sm-12" style="width: 100%;" data-toggle="buttons">
+  <button id="submit" type="button" class="btn btn-default" style="display: block; width: 100%;">Submit</button>
+</div>
+</div>
+
+</div>
+<script>
+$(document).ready(function(){
+	inv=localStorage.getItem("inverted");
+	faceC=localStorage.getItem("faceCircle");
+
+	if(inv != null){
+		if(inv=="T"){
+			$("#invertedB").addClass('active');
+			$("#inverted").prop("checked",true);
+		}
+	}else{
+
+		localStorage.setItem("inverted","F");
+	}
+	if(faceC != null){
+		if(faceC=="T"){
+			$("#fCircleB").addClass('active');
+			$("#fCircle").prop("checked",true);
+		}
+	}else{
+		localStorage.setItem("faceCircle","F");
+	}
+
+	$("#fCircleB").click(function(){
+		if( $("#fCircle").prop("checked") ){
+			localStorage.setItem("faceCircle","F");
+		}else{
+			localStorage.setItem("faceCircle","T");
+		}
+	});
+	$("#invertedB").click(function(){
+		if( $("#inverted").prop("checked")){
+			localStorage.setItem("inverted","F");
+		}else{
+			localStorage.setItem("inverted","T");
+		}
+	});
+	$("#submit").click(function(){
+		str=JSON.stringify({'inverted':localStorage.getItem("inverted"),'faceCircle':localStorage.getItem("faceCircle")})
+		location.href = 'pebblejs://close#'+str;
+	});
+});
+</script>
 </body>
 </html>
