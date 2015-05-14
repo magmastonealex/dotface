@@ -76,7 +76,7 @@ $(document).ready(function(){
 	});
 	$("#submit").click(function(){
 		str=JSON.stringify({'inverted':localStorage.getItem("inverted"),'faceCircle':localStorage.getItem("faceCircle")})
-		location.href = 'pebblejs://close#'+str;
+		location.href = 'pebblejs://close#' + encodeURIComponent(str);
 	});
 });
 </script>
