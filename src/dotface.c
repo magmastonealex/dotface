@@ -59,43 +59,17 @@ static void my_layer_draw(Layer *layeer, GContext *ctx) {
   graphics_context_set_fill_color(ctx, GColorBlack);
   //0,1,2,3 are the valid hours.
   //
-  int xmult=1;
-  int ymult=1;
-
-  if(hr==12){hr=0;}
-
-  if(hr>3 && hr <= 6){
-    hr=hr-3;
-    ymult=-1;
-  }else if(hr > 6 && hr <=9){
-    hr=hr-6;
-    xmult=-1;
-    ymult=-1;
-  }else if(hr > 9){
-    hr=hr-9;
-    xmult=-1;
-  }
-
-  //float hr=0;
-  if(xmult==1 && ymult==1){
-    hr=3-hr;
-  }
-  //based on origin at 0,0
-  double y=abs(sin(hr*22.5f)*60.0f);
-  double x=abs(cos(hr*22.5f)*60.0f);
-  y *= ymult;
-  x *= xmult;
-  //shift origin
-  y= 84.0f-y;
-  x=72+x;
   
+  double x;
+  double y;
 
 int32_t hourHandLength=60;
 int32_t hour_angle = TRIG_MAX_ANGLE * t->tm_hour / 12;
 y = (-cos_lookup(hour_angle) * hourHandLength / TRIG_MAX_RATIO) + 84;
 x = (sin_lookup(hour_angle) * hourHandLength / TRIG_MAX_RATIO) + 72;
 
-  graphics_fill_circle(ctx, GPoint((int)x, (int)y), 5);
+  graphics_fill_circle(ctx, GPoint((int)x, (int)y), 5); // draw a dot, not a line
+  
 int32_t secondHandLength=60;
 int32_t second_angle = TRIG_MAX_ANGLE * t->tm_min / 60;
 y = (-cos_lookup(second_angle) * secondHandLength / TRIG_MAX_RATIO) + 84;
