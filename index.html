@@ -10,9 +10,10 @@
 <body>
 <div class="container" role="main">
 <div class="row">
-<div class="btn-group col-sm-12" style="" data-toggle="buttons">
-  <label id="invertedB" class="btn btn-primary" style="width: 100%;">
-    <input id="inverted" type="checkbox" autocomplete="off" style="display: block; width: 100%;"> Inverted?
+<div class="checkbox">
+  <label>
+    <input id="invertedB" type="checkbox" value="">
+    Inverted?
   </label>
 </div>
 </div>
@@ -20,9 +21,10 @@
 <br>
 <br>
 <div class="row">
-<div class="btn-group col-sm-12" style="" data-toggle="buttons">
-  <label id="fCircleB" class="btn btn-primary" style="width: 100%;">
-    <input id="fCircle" type="checkbox" autocomplete="off" style="display: block; width: 100%;"> Face circle?
+<div class="checkbox">
+  <label>
+    <input id="fCircleB"  type="checkbox" value="">
+    Face Circle
   </label>
 </div>
 </div>
@@ -45,7 +47,7 @@ $(document).ready(function(){
 	if(inv != null){
 		if(inv=="T"){
 			$("#invertedB").addClass('active');
-			$("#inverted").prop("checked",true);
+			$("#invertedB").prop("checked",true);
 		}
 	}else{
 
@@ -54,21 +56,21 @@ $(document).ready(function(){
 	if(faceC != null){
 		if(faceC=="T"){
 			$("#fCircleB").addClass('active');
-			$("#fCircle").prop("checked",true);
+			$("#fCircleB").prop("checked",true);
 		}
 	}else{
 		localStorage.setItem("faceCircle","F");
 	}
 
 	$("#fCircleB").click(function(){
-		if( $("#fCircle").prop("checked") ){
+		if( $("#fCircleB").prop("checked") ){
 			localStorage.setItem("faceCircle","F");
 		}else{
 			localStorage.setItem("faceCircle","T");
 		}
 	});
 	$("#invertedB").click(function(){
-		if( $("#inverted").prop("checked")){
+		if( $("#invertedB").prop("checked")){
 			localStorage.setItem("inverted","F");
 		}else{
 			localStorage.setItem("inverted","T");
