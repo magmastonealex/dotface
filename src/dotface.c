@@ -18,14 +18,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   // Process all pairs present
   while(t != NULL) {
     // Process this pair's key
-    switch (t->key) {
-      case 0:
-        persist_write_int(0, t->value->int32);
-        break;
-      case 1:
-        persist_write_int(1, t->value->int32);
-        break;
-    }
+    persist_write_int(t->key, t->value->int32);
 
     // Get next pair, if any
     t = dict_read_next(iterator);
@@ -111,11 +104,15 @@ static void my_layer_draw(Layer *layeer, GContext *ctx) {
 
   int invertq = 0;
   int faceC=0;
+  int faceD=0;
   if (persist_exists(0)) {
     invertq = persist_read_int(0);
   }
   if (persist_exists(1)) {
     faceC = persist_read_int(1);
+  }
+  if (persist_exists(2)) {
+    faceD = persist_read_int(2);
   }
 
   if(invertq!=0){
@@ -129,8 +126,8 @@ static void my_layer_draw(Layer *layeer, GContext *ctx) {
 
 
   
-  double x;
-  double y;
+double x;
+double y;
 
 int32_t hourHandLength=60;
  
@@ -139,13 +136,13 @@ y = (-cos_lookup(hour_angle) * hourHandLength / TRIG_MAX_RATIO) + 84;
 x = (sin_lookup(hour_angle) * hourHandLength / TRIG_MAX_RATIO) + 72;
 
   graphics_fill_circle(ctx, GPoint((int)x, (int)y), 5); // draw a dot, not a line
-
-int z;  
-for (z = 1; z < 13; z++) {
+if(faceD != 0){
+for (int z = 1; z < 13; z++) {
     int32_t mydot_angle = (TRIG_MAX_ANGLE / 12 * z);
     y = (-cos_lookup(mydot_angle) * hourHandLength / TRIG_MAX_RATIO) + 84;
     x = (sin_lookup(mydot_angle) * hourHandLength / TRIG_MAX_RATIO) + 72;
     graphics_fill_circle(ctx, GPoint((int)x, (int)y), 1);
+}
 }
 
 int32_t secondHandLength=60;

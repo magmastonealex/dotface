@@ -6,17 +6,22 @@ Pebble.addEventListener('showConfiguration', function(e) {
 Pebble.addEventListener('webviewclosed',
   function(e) {
     var configuration = JSON.parse(decodeURIComponent(e.response));
-    fc=configuration["faceCircle"]
-    inv=configuration["inverted"]
+    fc=configuration["faceCircle"];
+    inv=configuration["inverted"];
+    fd=configuration["faceDots"];
 	fci=0;
-	invi=0;   	
+	invi=0;
+  fDots=0;	
    	if (fc=="T"){
    		fci=1;
    	}
    	if(inv=="T"){
    		invi=1;
    	}
-   Pebble.sendAppMessage( { '0': fci, '1': invi },
+    if(fd=="T"){
+      fDots=1;
+    }
+   Pebble.sendAppMessage( { '0': fci, '1': invi,'2':fDots },
   function(e) {
     console.log('Successfully delivered message with transactionId='
       + e.data.transactionId);
@@ -28,4 +33,4 @@ Pebble.addEventListener('webviewclosed',
   }
 );
   }
-);
+); 
