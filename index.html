@@ -31,6 +31,17 @@
 
 <br>
 <br>
+<div class="row">
+<div class="checkbox">
+  <label id="fDots" >
+    <input id="fDotsB"  type="checkbox" value="">
+    Face Dots
+  </label>
+</div>
+</div>
+
+<br>
+<br>
 
 <div class="row">
 <div class="btn-group col-sm-12" style="width: 100%;" data-toggle="buttons">
@@ -43,7 +54,7 @@
 $(document).ready(function(){
 	inv=localStorage.getItem("inverted");
 	faceC=localStorage.getItem("faceCircle");
-
+	faceD=localStorage.getItem("faceDots");
 	if(inv != null){
 		if(inv=="T"){
 			$("#invertedB").addClass('active');
@@ -61,13 +72,28 @@ $(document).ready(function(){
 	}else{
 		localStorage.setItem("faceCircle","F");
 	}
-
+	if(faceD != null){
+		if(faceD=="T"){
+			$("#fDotsB").addClass('active');
+			$("#fDotsB").prop("checked",true);
+		}
+	}else{
+		localStorage.setItem("faceDots","F");
+	}
 	$("#fCircle").click(function(){
 		console.log("here?");
 		if( $("#fCircleB").prop("checked") ){
 			localStorage.setItem("faceCircle","T");
 		}else{
 			localStorage.setItem("faceCircle","F");
+		}
+	});
+	$("#fDots").click(function(){
+		console.log("here?");
+		if( $("#fDotsB").prop("checked") ){
+			localStorage.setItem("faceDots","T");
+		}else{
+			localStorage.setItem("faceDots","F");
 		}
 	});
 	$("#inverted").click(function(){
@@ -79,7 +105,7 @@ $(document).ready(function(){
 	});
 	$("#submit").click(function(){
 		//fixed stuff.
-		str=JSON.stringify({'inverted':localStorage.getItem("faceCircle"),'faceCircle':localStorage.getItem("inverted")})
+		str=JSON.stringify({'inverted':localStorage.getItem("faceCircle"),'faceCircle':localStorage.getItem("inverted"),'faceDots':localStorage.getItem("faceDots")})
 		location.href = 'pebblejs://close#' + encodeURIComponent(str);
 	});
 });
