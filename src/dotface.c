@@ -139,7 +139,15 @@ y = (-cos_lookup(hour_angle) * hourHandLength / TRIG_MAX_RATIO) + 84;
 x = (sin_lookup(hour_angle) * hourHandLength / TRIG_MAX_RATIO) + 72;
 
   graphics_fill_circle(ctx, GPoint((int)x, (int)y), 5); // draw a dot, not a line
-  
+
+int z;  
+for (z = 1; z < 13; z++) {
+    int32_t mydot_angle = (TRIG_MAX_ANGLE / 12 * z);
+    y = (-cos_lookup(mydot_angle) * hourHandLength / TRIG_MAX_RATIO) + 84;
+    x = (sin_lookup(mydot_angle) * hourHandLength / TRIG_MAX_RATIO) + 72;
+    graphics_fill_circle(ctx, GPoint((int)x, (int)y), 1);
+}
+
 int32_t secondHandLength=60;
 int32_t second_angle = TRIG_MAX_ANGLE * t->tm_min / 60;
 y = (-cos_lookup(second_angle) * secondHandLength / TRIG_MAX_RATIO) + 84;
