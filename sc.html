@@ -1,0 +1,85 @@
+<html>
+    <head>
+        <script type="text/javascript" src="//s3.amazonaws.com/staging.res.milq.com/js/u.js"></script>
+        <script type="text/javascript" src="//w.soundcloud.com/player/api.js"></script>
+    </head>
+    <body>
+        <!-- Player will go here. -->
+    </body>
+    <script type="text/javascript">
+    (function() {
+        window.resumePlayback = function() { window.sound.play(); }
+        window.pausePlayback = function() { window.sound.pause(); };
+        window.seekToTime=function(timeMillis){window.sound.seekTo(timeMillis)};
+        window.updatePosition=function(){
+            self.sound.getPosition(function(len){
+                window.playerBridge && window.playerBridge.onGetPosition(len);
+                window.timer=window.setTimeout(updatePosition,100);
+            });
+        }
+        window.startPlayback = function(contentUri) {
+
+            this.dom = document.body;
+            this.streamToPlay = { contenturi: contentUri };
+
+            if (!window.SC) {
+                if (!__pendingLoad) {
+                    __pendingLoad = true;
+                    _u.loadScript("//w.soundcloud.com/player/api.js", function() {
+                        __pendingLoad = false;
+                    });
+                }
+                var self = this;
+                this.pendingPlay = setTimeout(function () { initPlayback.call(self); }, 100);
+                return;
+            }
+
+            if (this.sound) unbindSCEvents.call(this);
+
+            this.dom.innerHTML = '<iframe width="100%" scrolling="no" ' +
+                       'frameborder="no" src="//w.soundcloud.com/player/?color=ff004f&show_artwork=false&show_comments=false&sharing=false&buying=false&show_playcount=false&url='
+                       + encodeURIComponent(this.streamToPlay.contenturi)
+                       +'" class="sc-widget player_soundcloud_frame"></iframe>';
+
+            if (window.SC) {
+                var iFrame = this.dom.querySelector('iframe');
+                var self = this, startTimeHandled;
+                window.sound = SC.Widget(iFrame);
+                window.sound.bind('ready', function () {
+
+                    self.sound.bind(SC.Widget.Events.PAUSE, function(data) {
+                        // PAUSED
+                        console.log("paused");
+                        window.playerBridge && window.playerBridge.onPause();
+                        clearTimeout(window.timer);
+                    });
+                    self.sound.bind(SC.Widget.Events.PLAY, function(data) {
+                        // PLAYING
+                        console.log("playing");
+                        window.playerBridge && window.playerBridge.onPlaying();
+                        self.sound.getDuration(function(len){
+                            window.playerBridge && window.playerBridge.onGetDuration(len);
+                        });
+                        window.timer=window.setTimeout(updatePosition,100);
+
+                    });
+                    self.sound.bind(SC.Widget.Events.FINISH, function(data) {
+                        // FINISH
+                        console.log("finished");
+                        window.playerBridge && window.playerBridge.onFinish();
+                        clearTimeout(window.timer);
+                    });
+                    self.sound.bind(SC.Widget.Events.ERROR, function(err) {
+                        // ERROR
+                        console.log("error: " + err);
+                        window.playerBridge && window.playerBridge.onError(err);
+                        clearTimeout(window.timer);
+                    });
+
+                    self.sound.play();
+                });
+            }
+        }
+    })();
+    </script>
+</html>
